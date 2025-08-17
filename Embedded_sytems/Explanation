@@ -1,0 +1,27 @@
+--Why this is an embedded systems project--
+
+This project implements a small embedded control loop on an Arduino Uno (ATmega328P).
+The system reads an ultrasonic distance sensor (HC-SR04),
+drives a micro-servo to sweep the sensor through an angular field of view,
+computes distance from time-of-flight, and publishes angle–distance data over USB serial.
+
+System elements
+• Controller: Arduino Uno
+• Sensor: HC-SR04 (Trig, Echo)
+• Actuator: SG90-class micro-servo
+• Interface: USB serial telemetry to a host computer
+
+Data flow: sensor → microcontroller (measurement) → computation → servo motion → serial output
+
+--How it works--
+1.Trigger a short pulse on the sensor and measure the echo pulse width in microseconds.
+2.Convert time-of-flight to distance in centimeters (divide by two for out-and-back travel).
+3.Sweep the servo from 0° to 180° and back, sampling at each step.
+4.Stream angle and distance readings over serial for logging or visualization.
+
+--What this demonstrates--
+• GPIO and timing for external sensors (Trig/Echo)
+• PWM control for a hobby servo (approximately 1–2 ms pulse every 20 ms)
+• UART/serial communication for telemetry
+• Basic hardware integration: 5 V logic, common ground, handling servo current spikes (use a separate 5 V rail if needed)
+
