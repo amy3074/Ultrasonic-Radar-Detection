@@ -1,3 +1,4 @@
+--Arduino code
 #define trigPin 9
 #define echoPin 10
 
