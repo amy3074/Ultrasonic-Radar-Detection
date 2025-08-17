@@ -1,0 +1,35 @@
+##Integrating MATLAB with Arduino
+
+MATLAB as the brain (PC controls the Arduino over USB)
+Great for prototyping, logging and plotting without rewriting Arduino code.
+
+What I installed
+- MATLAB + the MATLAB Support Package for Arduino Hardware
+  (MATLAB → Home → Add-Ons → Get Hardware Support Packages)
+
+What it does
+- MATLAB opens a live connection to the board,
+- reads the ultrasonic sensor,
+- drives the servo,
+- and plots angle–distance in real time.
+
+Minimal MATLAB script
+---matlab
+% Connect (adjust 'Uno' if you use a different board)
+a   = arduino('COM3','Uno','Libraries',{'Servo','Ultrasonic'});
+son = ultrasonic(a,'D9','D10');     % TRIG = D9, ECHO = D10
+srv = servo(a,'D3');                % servo signal on D3
+
+angles = 0:2:180;                   % sweep step (degrees)
+figure; pol = polarplot(0,0); rlim([0 4]); % meters (HC-SR04 ~0.02–4m)
+
+for k = [angles, fliplr(angles)]
+    writePosition(srv, k/180);      % 0..1 maps to 0..180 deg
+    pause(0.03);                    % let servo settle
+    d = readDistance(son);          % meters
+    set(pol,'ThetaData',deg2rad(k),'RData',min(d,4));
+    drawnow;
+end
+
+clear a
+----
